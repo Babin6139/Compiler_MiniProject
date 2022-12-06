@@ -8,7 +8,6 @@
 		}
 
 		td {
-			horizontal-align: middle;
 			vertical-align: middle;
 		}
 
@@ -24,7 +23,7 @@
 <body>
 	<header>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
-			<a class="navbar-brand" href="#">LL1 Grammar - Compiler Design Mini Project</a>
+			<a class="navbar-brand" href="#">LL(1) Grammar - Compiler Design Mini Project</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
 				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -34,9 +33,8 @@
 
 	<main class="container py-4">
 			<div class="row">
-			  <div class="col-3">
 				<div class="my-2">LL(1) grammar ('' is &epsilon;):</div>
-						<textarea id="grammar" rows="10" class="w-100 p-2" onchange="grammarChanged();">
+					<textarea id="grammar" class="form-control p-4 w-25" rows="10" onchange="grammarChanged();">
 						E -> T E'
 						E' -> + T E'
 						E' -> ''
@@ -46,11 +44,14 @@
 						F -> ( E )
 						F -> id
 			</textarea>
-			  </div>
-			  <div class="col-1">
-				<input type="button" onclick="grammarChanged()" id="arrow-btn" class="btn btn-dark" value=">>">
-			  </div>
-			  <div class="col-8">
+			
+			</div>
+
+			<div class="row">
+				<input type="button" onclick="grammarChanged()" id="arrow-btn" class="btn btn-dark w-25" value="Generate Parse Table">
+
+			</div>
+			<div class="row">
 				<h3 id="parse-table-heading">Parse Table</h3>
 				<table border="1" class="table table-bordered mt-2">
 					<thead>
@@ -63,7 +64,6 @@
 					<tbody id="llTableRows">
 					</tbody>
 				</table>
-			  </div>
 			</div>
 
 		<div class="container mt-4">

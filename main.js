@@ -2,7 +2,7 @@ function $element(id) {
 	return document.getElementById(id);
 }
 
-var EPSILON = '\'\'';
+var EPSILON = "\'\'";
 
 var alphabet;
 var nonterminals;
