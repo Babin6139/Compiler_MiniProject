@@ -13,7 +13,6 @@ var follows;
 var ruleTable;
 
 function grammarChanged() {
-    console.log("Hello, world")
 	$element('llTableRows').innerHTML = '';
 	
 	rules = $element('grammar').value.split('\n');
