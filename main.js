@@ -16,10 +16,11 @@ function grammarChanged() {
 	$element('llTableRows').innerHTML = '';
 	
 	rules = $element('grammar').value.split('\n');
+	console.log(rules)
 	alphabet = [];
 	nonterminals = [];
 	terminals = [];
-	
+	leftRecursion()
 	collectAlphabetAndNonterminalsAndTerminals();
 	collectFirsts();
 	collectFollows();
@@ -29,6 +30,53 @@ function grammarChanged() {
 	
 	parseInput();
 }
+
+function leftRecursion(){
+	temp_rules=[]
+	for (i=0; i< rules.length;i++){
+	recursivePart=[]
+	non_recursivePart=[]
+	  temp1=rules[i].split("->");
+	  left_part=temp1[0].trim();
+	  right_part=temp1.slice(1)
+	  right_part=right_part[0].split("|")
+	  for(j=0;j<right_part.length;j++){
+		if (right_part[j].trim().startsWith(left_part.trim())){
+		  recursivePart.push(right_part[j].trim())
+		}else{
+		  non_recursivePart.push(right_part[j].trim())
+		}
+	  }
+	  if (recursivePart.length<1){
+		  for(j=0;j<right_part.length;j++){
+			  temp_rules.push(left_part+"->"+right_part[j].trim())
+		  }
+		continue
+	}
+	else{
+		for (k=0;k<non_recursivePart.length; k++){
+			temp3=non_recursivePart[k]
+			update_left=left_part+"\`"
+			non_recursivePart[k]=temp3+update_left
+			temp_rules.push(left_part+"->"+non_recursivePart[k])
+		}
+		for (k=0;k<recursivePart.length; k++){
+			temp3=recursivePart[k].slice(1)
+			update_left=left_part+"\`"
+			recursivePart[k]=temp3+update_left
+			temp_rules.push(update_left+"->"+recursivePart[k])
+			if (k+1===recursivePart.length){
+				temp_rules.push(update_left+"-> Ɛ")
+			}
+		}
+		
+	}
+	}
+	
+	console.log(temp_rules)
+	rules=temp_rules
+  }
+  
 
 function displayTable() {
 	$element('llTableHead').innerHTML = "<th>FIRST</th><th>FOLLOW</th><th>Nonterminal</th>";
