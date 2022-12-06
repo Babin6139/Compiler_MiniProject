@@ -1,5 +1,11 @@
-#arrow-btn {
-    margin-top: 1rem;
+#top-container {
+ border: 1px solid #c6c1c1;
+ padding-bottom: 1.5rem;
+}
+
+#parse-table-container {
+ border: 1px solid #c6c1c1;
+ padding: .8rem;
 }
 
 #parse-table-heading {

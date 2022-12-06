@@ -23,6 +23,9 @@
 <body>
 	<header>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+			<a class="navbar-brand" href="#">
+				<img src="./assets/logo.png" width="60" height="60" class="d-inline-block align-top" alt="">
+			  </a>
 			<a class="navbar-brand" href="#">LL(1) Grammar - Compiler Design Mini Project</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
 				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,10 +35,10 @@
 	</header>
 
 	<main class="container py-4">
-			<div class="row">
-				<div class="my-2">LL(1) grammar ('' is &epsilon;):</div>
-					<textarea id="grammar" class="form-control p-4 w-25" rows="10" onchange="grammarChanged();">
-						E -> T E'
+			<div class="row" id="top-container">
+				<h2 class="text-center">LL(1) Parsing</h2>
+				<div class="my-2 text-center">LL(1) grammar ('' is &epsilon;):</div>
+					<textarea id="grammar" class="form-control p-4 w-25 mx-auto" rows="10" onchange="grammarChanged();">E -> T E'
 						E' -> + T E'
 						E' -> ''
 						T -> F T'
@@ -43,16 +46,15 @@
 						T' -> ''
 						F -> ( E )
 						F -> id
-			</textarea>
+					</textarea>
 			
 			</div>
 
-			<div class="row">
-				<input type="button" onclick="grammarChanged()" id="arrow-btn" class="btn btn-dark w-25" value="Generate Parse Table">
-
+			<div class="row py-4">
+				<input type="button" onclick="grammarChanged()" id="arrow-btn" class="btn btn-lg btn-dark w-25 mx-auto" value="Generate Parse Table">
 			</div>
-			<div class="row">
-				<h3 id="parse-table-heading">Parse Table</h3>
+			<div class="row" id="parse-table-container">
+				<h3 id="parse-table-heading" class="text-center">Parse Table</h3>
 				<table border="1" class="table table-bordered mt-2">
 					<thead>
 						<tr id="llTableHead">
@@ -67,12 +69,18 @@
 			</div>
 
 		<div class="container mt-4">
-			<p>Maximum number of steps: <input id="maximumStepCount" type="text" size="3" onkeyup="resize(this, 3);"
-				onchange="parseInput();" value="100"></p>
-		<p>Input (tokens): <input id="input" type="text" size="10" onkeyup="resize(this, 10);" onchange="parseInput();"
-				value="id + id"></p>
-		<p><input type="button" class="btn btn-dark" value="GO!"></p>
-		<br>
+			<div class="row">
+				<div class="col">
+					Maximum number of steps: <input id="maximumStepCount" type="text" size="3" onkeyup="resize(this, 3);"
+				onchange="parseInput();" value="100">
+				</div>
+				<div class="col">
+					Input (tokens): <input id="input" type="text" size="10" onkeyup="resize(this, 10);" onchange="parseInput();"
+				value="id + id">
+				<input type="button" class="btn btn-dark" value="GO!">
+				</div>
+			</div>
+			
 		<table border="2" class="table table-bordered">
 			<thead>
 				<tr>
@@ -95,7 +103,6 @@
 						</table>
 					</td>
 		</div>	
-		
 	</main>
 
 	<script src="main.js"></script>
