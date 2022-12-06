@@ -57,13 +57,13 @@ function leftRecursion(){
 		for (k=0;k<non_recursivePart.length; k++){
 			temp3=non_recursivePart[k]
 			update_left=left_part+"\`"
-			non_recursivePart[k]=temp3+update_left
+			non_recursivePart[k]=temp3+" "+update_left
 			temp_rules.push(left_part+"->"+non_recursivePart[k])
 		}
 		for (k=0;k<recursivePart.length; k++){
 			temp3=recursivePart[k].slice(1)
 			update_left=left_part+"\`"
-			recursivePart[k]=temp3+update_left
+			recursivePart[k]=temp3+" "+update_left
 			temp_rules.push(update_left+"->"+recursivePart[k])
 			if (k+1===recursivePart.length){
 				temp_rules.push(update_left+"-> Ɛ")

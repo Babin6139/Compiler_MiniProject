@@ -39,10 +39,10 @@
 			<div class="row">
 			  <div class="col-3">
 				<div>LL(1) grammar ('' is &epsilon;):</div>
-						<textarea id="grammar" rows="10" class="w-100 p-2" onchange="grammarChanged();">S -> ABC
-						A -> abA | ab
-						B -> b | BC
-						C -> c | cC</textarea>
+						<textarea id="grammar" rows="10" class="w-100 p-2" onchange="grammarChanged();">S -> A B C
+						A -> a b A | a b
+						B -> b | B C
+						C -> c | c C</textarea>
 			  </div>
 			  <div class="col-1">
 				<input type="button" onclick="grammarChanged()" id="arrow-btn" class="btn btn-dark" value=">>">
