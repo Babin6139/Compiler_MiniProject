@@ -2,8 +2,8 @@
 
 <head>
 	<meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>LL(1) Parser Generator</title>
 	<style>
 		body * {
@@ -28,7 +28,7 @@
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
 			<a class="navbar-brand" href="#">
 				<img src="./assets/logo.png" width="60" height="60" class="d-inline-block align-top" alt="">
-			  </a>
+			</a>
 			<a class="navbar-brand" href="#">LL(1) Grammar - Compiler Design Mini Project</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
 				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,69 +38,143 @@
 	</header>
 
 	<main class="container py-4">
-			<div class="row" id="top-container">
-				<h2 class="text-center">LL(1) Parsing</h2>
-				<div class="my-2 text-center">LL(1) grammar ('' is &epsilon;):</div>
-					<textarea id="grammar" class="form-control p-4 w-25 mx-auto" rows="10" onchange="grammarChanged();">S -> A B C
+		<h2 class="text-center">LL(1) Parsing</h2>
+
+		<div class="row" id="top-container">
+			<div class="my-2 text-center">LL(1) grammar ('' is &epsilon;):</div>
+			<textarea id="grammar" class="form-control p-4 w-25 mx-auto" rows="10" onchange="grammarChanged();">S -> A B C
 						A -> a b A | a b
 						B -> b | B C
 						C -> c | c C</textarea>
-			</div>
+		</div>
 
-			<div class="row py-4">
-				<input type="button" onclick="grammarChanged()" id="arrow-btn" class="btn btn-lg btn-dark w-25 mx-auto" value="Generate Parse Table">
-			</div>
-			<div class="row" id="parse-table-container">
-				<h3 id="parse-table-heading" class="text-center">Parse Table</h3>
-				<table border="1" class="table table-bordered mt-2">
-					<thead>
-						<tr id="llTableHead">
-							<th>FIRST</th>
-							<th>FOLLOW</th>
-							<th>Nonterminal</th>
-						</tr>
-					</thead>
-					<tbody id="llTableRows">
-					</tbody>
-				</table>
-			</div>
+		<div class="row py-4">
+			<input type="button" onclick="grammarChanged()" id="arrow-btn" class="btn btn-lg btn-dark w-25 mx-auto"
+				value="Generate Parse Table">
+		</div>
+
+		<div class="row" id="parse-table-container">
+			<h3 id="parse-table-heading" class="text-center">Parse Table</h3>
+			<table border="1" class="table table-bordered mt-2">
+				<thead>
+					<tr id="llTableHead">
+						<th>FIRST</th>
+						<th>FOLLOW</th>
+						<th>Nonterminal</th>
+					</tr>
+				</thead>
+				<tbody id="llTableRows">
+				</tbody>
+			</table>
+		</div>
 
 		<div class="container mt-4">
 			<div class="row">
 				<div class="col">
-					Maximum number of steps: <input id="maximumStepCount" type="text" size="3" onkeyup="resize(this, 3);"
-				onchange="parseInput();" value="100">
+					Maximum number of steps: <input id="maximumStepCount" type="text" size="3"
+						onkeyup="resize(this, 3);" onchange="parseInput();" value="100">
 				</div>
 				<div class="col">
-					Input (tokens): <input id="input" type="text" size="10" onkeyup="resize(this, 10);" onchange="parseInput();"
-				value="id + id">
-				<input type="button" class="btn btn-dark" value="GO!">
+					Input (tokens): <input id="input" type="text" size="10" onkeyup="resize(this, 10);"
+						onchange="parseInput();" value="id + id">
+					<input type="button" class="btn btn-dark" value="GO!">
 				</div>
 			</div>
-			
-		<table border="2" class="table table-bordered">
-			<thead>
-				<tr>
-					<th>Trace</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>
-						<table class="table table-bordered" border="1">
-							<thead>
-								<tr>
-									<th>Stack</th>
-									<th>Input</th>
-									<th>Rule</th>
-								</tr>
-							</thead>
-							<tbody id="parsingTableRows">
-							</tbody>
-						</table>
-					</td>
-		</div>	
+
+			<table border="2" class="table table-bordered my-4">
+				<thead>
+					<tr>
+						<th>Trace</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<table class="table table-bordered" border="1">
+								<thead>
+									<tr>
+										<th>Stack</th>
+										<th>Input</th>
+										<th>Rule</th>
+									</tr>
+								</thead>
+								<tbody id="parsingTableRows">
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
 	</main>
+
+	<section class="container mb-5" id="supervisor">
+		<h1 class="bg-light text-center py-3 my-4">Course Instructor</h1>
+		<div class="card mx-auto text-center" style="width: 18rem;">
+			<img src="./assets/supervisor.jpg" class="card-img-top" alt="Sushil Nepal">
+			<div class="card-body">
+			  <h5 class="card-title">Sushil Nepal</h5>
+			  <a href="https://www.linkedin.com/in/sushil-nepal-a2476a77/?originalSubdomain=np" class="btn btn-dark">Know more</a>
+			</div>
+		  </div>
+	</section>
+
+	<section class="container my-5" id="team">
+		<h1 class="bg-light text-center py-3 my-4">Our Team</h1>
+		<div class="row">
+			<div class="col">
+				<div class="card text-center" style="width: 18rem;">
+					<img src="./assets/supervisor.jpg" class="card-img-top" alt="Sushil Nepal">
+					<div class="card-body">
+					  <h5 class="card-title">Ankit Khatiwada</h5>
+					  <a href="https://www.linkedin.com/in/sushil-nepal-a2476a77/?originalSubdomain=np" class="btn btn-dark">Know more</a>
+					</div>
+				  </div>
+			</div>
+
+			<div class="col">
+				<div class="card text-center" style="width: 18rem;">
+					<img src="./assets/supervisor.jpg" class="card-img-top" alt="Sushil Nepal">
+					<div class="card-body">
+					  <h5 class="card-title">Babin Khatri</h5>
+					  <a href="https://www.linkedin.com/in/sushil-nepal-a2476a77/?originalSubdomain=np" class="btn btn-dark">Know more</a>
+					</div>
+				  </div>
+			</div>
+
+			<div class="col">
+				<div class="card text-center" style="width: 18rem;">
+					<img src="./assets/amar.jpg" class="card-img-top" alt="Sushil Nepal">
+					<div class="card-body">
+					  <h5 class="card-title">Amar Kumar Mandal</h5>
+					  <a href="https://www.linkedin.com/in/amar-mandal-4ab87b192/" class="btn btn-dark">Know more</a>
+					</div>
+				  </div>
+			</div>
+
+			<div class="col">
+				<div class="card text-center" style="width: 18rem;">
+					<img src="./assets/supervisor.jpg" class="card-img-top" alt="Sushil Nepal">
+					<div class="card-body">
+					  <h5 class="card-title">Nischal Bhandari</h5>
+					  <a href="https://www.linkedin.com/in/sushil-nepal-a2476a77/?originalSubdomain=np" class="btn btn-dark">Know more</a>
+					</div>
+				  </div>
+			</div>
+
+			<div class="col my-4">
+				<div class="card text-center" style="width: 18rem;">
+					<img src="./assets/supervisor.jpg" class="card-img-top" alt="Sushil Nepal">
+					<div class="card-body">
+					  <h5 class="card-title">Nabin Ghimire</h5>
+					  <a href="https://www.linkedin.com/in/sushil-nepal-a2476a77/?originalSubdomain=np" class="btn btn-dark">Know more</a>
+					</div>
+				  </div>
+			</div>
+			
+		</div>
+	</section>
 
 	<script src="main.js"></script>
 </body>
