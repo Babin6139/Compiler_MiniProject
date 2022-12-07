@@ -652,7 +652,6 @@ function parseInput() {
   $element("parsingTableRows").innerHTML = parsingRows;
 
   $element("input").style.color = ok ? "green" : "red";
-  $element("tree").innerHTML = ok ? toString(tree.children[0]) : "";
 }
 
 function toString(tree) {
