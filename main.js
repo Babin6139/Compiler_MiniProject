@@ -2,7 +2,7 @@ function $element(id) {
   return document.getElementById(id);
 }
 
-var EPSILON = "''";
+var EPSILON = "Ɛ";
 
 var alphabet;
 var nonterminals;
@@ -11,21 +11,28 @@ var rules;
 var firsts;
 var follows;
 var ruleTable;
-let left_part = [];
+var left_prod = [];
 let right_prod = {};
 //for temporarily storing rule after performing LF
-const f_prod_no_lf = {};
+let f_prod_no_lf = {};
 
 function grammarChanged() {
   $element("llTableRows").innerHTML = "";
 
   rules = $element("grammar").value.split("\n");
-  console.log(rules);
   alphabet = [];
   nonterminals = [];
   terminals = [];
 
   leftRecursion();
+  if(requireLeftFactoring()){
+    removeCommonPrefix();
+    console.log(createGrammar)
+    temp_rules=createGrammar();
+    rules=temp_rules
+    console.log("Hello")
+    console.log(rules);
+  }
   collectAlphabetAndNonterminalsAndTerminals();
   collectFirsts();
   collectFollows();
@@ -76,45 +83,14 @@ function leftRecursion() {
       }
     }
   }
-
-  if(!requireLeftFactoring(temp_rules)) {
-	rules = temp_rules
-  } else {
-	rules = removeCommonPrefix(temp_rules)
-  }
-
-//   console.log(temp_rules);
-//   rules = temp_rules;
+  rules=temp_rules
+  console.log(temp_rules)
 }
 
-//TODO: Complete this function
-const requireLeftFactoring = (temp_rules) => {
-	for (let i = 0; i < temp_rules.length; i++) {
-		
-	}
-}
-
-//TODO: Implement Left Factoring
-const removeCommonPrefix = () => {
-  //
-}
-
-//Start of Left Factoring
-const my_grammar = [
-	'S->A B C',
-	'A->a b A',
-	'A->a b',
-	"B->b B'",
-	"B'-> C B'",
-	"B'-> Ɛ",
-	'C->c',
-	'C->c C'
-];
-
-//TODO: Create new function 
-for (let i = 0; i < my_grammar.length; i++) {
-	let [l, r] = my_grammar[i].split('->');
-	left_part.push(l);
+const requireLeftFactoring = () => {
+	for (let i = 0; i < rules.length; i++) {
+	let [l, r] = rules[i].split('->');
+	left_prod.push(l);
 
 	if (!(l in right_prod)) {
 		right_prod[l] = r.trim();
@@ -122,62 +98,111 @@ for (let i = 0; i < my_grammar.length; i++) {
 		right_prod[l] = [].concat(right_prod[l], r.trim());
 	}
 }
-
-//Get list of duplicate Terminal symbol
-const getDuplicateNonTerminal = elements => {
-	return elements.filter((item, index) => elements.indexOf(item) !== index);
-};
-
-const duplicateTerminalSymbol = getDuplicateNonTerminal(left_part);
-
-//get common characters from the right part of the production
-//incase of multiple rule
-function getCommonCharacters(values) {
-	const common_characters = [];
-	for (let i = 0; i < values[0].length; i++) {
-		let char = values[0].charAt(i);
-		let x = 1;
-		while (x < values.length) {
-			if (values[x].includes(char)) {
-				if (x === values.length - 1) {
-					common_characters.push(char);
-				}
-			}
-			x += 1;
-		}
-	}
-
-	return common_characters.join('');
-}
-
-duplicateTerminalSymbol.forEach(l => {
+const duplicateTerminalSymbol = getDuplicateNonTerminal(left_prod);
+let left_factor=false
+duplicateTerminalSymbol.map(l => {
 	const common_seq = getCommonCharacters(right_prod[l]);
+    if (common_seq.length==0){
+        left_factor=false
+    }else{
+        left_factor=true;
+        return;
+    }
+}
+)
+return left_factor
 
-	if (common_seq.length !== 0) {
-		f_prod_no_lf[l] = [`${l} -> ${common_seq.trim()} ${l.trim()}'`];
-    
-		const uncommon_char = [];
-
-		for (const prod of right_prod[l]) {
-			[alpha, beta] = prod.split(common_seq);
-			uncommon_char.push(beta);
-		}
-
-
-    for (const prod of uncommon_char) {
-      if(typeof prod !== 'undefined' && prod.length !== 0) {
-		    f_prod_no_lf[l].push(`${l}' -> ${prod}`);
-      } else {
-		    f_prod_no_lf[l].push(`${l}' -> Ɛ`);
+}
+  
+  
+  //TODO: Implement Left Factoring
+  const removeCommonPrefix = () => {
+  const duplicateTerminalSymbol = getDuplicateNonTerminal(left_prod);
+  duplicateTerminalSymbol.forEach(l => {
+    const common_seq = getCommonCharacters(right_prod[l]);
+  
+    if (common_seq.length !== 0) {
+      f_prod_no_lf[l] = [`${l} -> ${common_seq.trim()} ${l.trim()}'`];
+      
+      const uncommon_char = [];
+  
+      for (const prod of right_prod[l]) {
+        [alpha, beta] = prod.split(common_seq);
+        uncommon_char.push(beta);
+      }
+  
+  
+      for (const prod of uncommon_char) {
+        if(typeof prod !== 'undefined' && prod.length !== 0) {
+          f_prod_no_lf[l].push(`${l}' -> ${prod}`);
+        } else {
+            f_prod_no_lf[l].push(`${l}' -> Ɛ`);
+        }
+      }
+  
+    }
+  });
+  
+  
+  //updated rule after performing LF
+  f_prod_no_lf = {...right_prod, ...f_prod_no_lf}
+  console.log(f_prod_no_lf)
+  }
+  
+  
+  
+  
+  
+  //TODO: Create new function 
+  
+  
+  //Get list of duplicate Terminal symbol
+  const getDuplicateNonTerminal = elements => {
+    return elements.filter((item, index) => elements.indexOf(item) !== index);
+  };
+  
+  
+  
+  //get common characters from the right part of the production
+  //incase of multiple rule
+  function getCommonCharacters(values) {
+    const common_characters = [];
+    for (let i = 0; i < values[0].length; i++) {
+      let char = values[0].charAt(i);
+      let x = 1;
+      while (x < values.length) {
+        if (values[x].includes(char)) {
+          if (x === values.length - 1) {
+            common_characters.push(char);
+          }
+        }
+        x += 1;
       }
     }
+  
+    return common_characters.join('');
+  }
+  
+  function createGrammar(){
+      const temp_grammar=[]
+      for (const [key, value] of Object.entries(f_prod_no_lf)) {
+      if(typeof value==="object"){
+          value.forEach(v=>{
+              if(v.includes("->")){
+                  temp_grammar.push(v)
+              }else{
+                  temp_grammar.push(`${key} -> ${v}`)
+              }
+              
+          })
+      }else{
+          temp_grammar.push(`${key} -> ${value}`)
+      }
+      
+  }
+  return temp_grammar;
+  }
 
-	}
-});
-
-//updated rule after performing LF
-f_prod_no_lf = {...right_prod, ...f_prod_no_lf}
-//End of Left Factoring
 
 function displayTable() {
   $element("llTableHead").innerHTML = "<th>FIRST</th><th>FOLLOW</th><th>Nonterminal</th>";
@@ -559,7 +584,7 @@ function parseInput() {
     }
 
     var rule = "";
-
+    console.log(stackTop)
     if (stackTop == symbol) {
       stack.pop();
       ++index;
@@ -567,6 +592,18 @@ function parseInput() {
     } else {
       if (isElement(stackTop, nonterminals)) {
         rule = ruleTable[stackTop][symbol];
+        if(rule!==undefined){
+
+          if (rule.includes("<br>")){
+            let temp_rule=rule.split("<br>");
+            temp_rule.forEach(r=>{
+              if(!r.includes(EPSILON)){
+                rule=r;
+              }
+            })
+          }
+        }
+        console.log(rule)
         var node = new Object();
         node.label = stackTop;
         node.children = [];
