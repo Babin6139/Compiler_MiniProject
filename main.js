@@ -19,20 +19,27 @@ let f_prod_no_lf = {};
 function grammarChanged() {
   $element("llTableRows").innerHTML = "";
 
-  rules = $element("grammar").value.split("\n");
   alphabet = [];
   nonterminals = [];
   terminals = [];
+  rules=[]
+  firsts=[]
+  follows=[]
+  ruleTable=[]
+  left_prod = [];
+  right_prod = {};
+//for temporarily storing rule after performing LF
+  f_prod_no_lf = {};
+  rules = $element("grammar").value.split("\n");
 
   leftRecursion();
+  $element("left_recursion_grammar").value=rules.join("\n");
   if(requireLeftFactoring()){
     removeCommonPrefix();
-    console.log(createGrammar)
     temp_rules=createGrammar();
     rules=temp_rules
-    console.log("Hello")
-    console.log(rules);
   }
+  $element("left_factored_grammar").value=rules.join("\n");
   collectAlphabetAndNonterminalsAndTerminals();
   collectFirsts();
   collectFollows();
@@ -84,7 +91,6 @@ function leftRecursion() {
     }
   }
   rules=temp_rules
-  console.log(temp_rules)
 }
 
 const requireLeftFactoring = () => {
@@ -146,7 +152,6 @@ return left_factor
   
   //updated rule after performing LF
   f_prod_no_lf = {...right_prod, ...f_prod_no_lf}
-  console.log(f_prod_no_lf)
   }
   
   
@@ -175,6 +180,9 @@ return left_factor
           if (x === values.length - 1) {
             common_characters.push(char);
           }
+        }
+        else{
+          return common_characters.join('');
         }
         x += 1;
       }
@@ -574,7 +582,6 @@ function parseInput() {
   tree.label = "root";
   tree.children = [];
   var parents = [tree];
-
   for (var i = 0, index = 0; i < maximumStepCount && 1 < stack.length; ++i) {
     var stackTop = stack[stack.length - 1];
     var symbol = index < input.length ? input[index] : "$";
@@ -584,7 +591,6 @@ function parseInput() {
     }
 
     var rule = "";
-    console.log(stackTop)
     if (stackTop == symbol) {
       stack.pop();
       ++index;
@@ -596,14 +602,14 @@ function parseInput() {
 
           if (rule.includes("<br>")){
             let temp_rule=rule.split("<br>");
-            temp_rule.forEach(r=>{
-              if(!r.includes(EPSILON)){
-                rule=r;
-              }
-            })
+            // temp_rule.forEach(r=>{
+            //   if(!r.includes(EPSILON)){
+            //     rule=r;
+            //   }
+            // })
+            rule=temp_rule[1]
           }
         }
-        console.log(rule)
         var node = new Object();
         node.label = stackTop;
         node.children = [];
@@ -618,7 +624,7 @@ function parseInput() {
 
         var reverseDevelopment = rule.split("->")[1].trim().split(" ").slice(0).reverse();
 
-        for (var i in reverseDevelopment) {
+        for (var j in reverseDevelopment) {
           parents.push(node);
         }
 

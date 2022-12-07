@@ -40,12 +40,23 @@
 	<main class="container py-4">
 		<h2 class="text-center">LL(1) Parsing</h2>
 
-		<div class="row" id="top-container">
-			<div class="my-2 text-center">LL(1) grammar :</div>
-			<textarea id="grammar" class="form-control p-4 w-25 mx-auto" rows="10" onchange="grammarChanged();">S -> A B C
+		<div class="d-flex justify-content-between w-100 px-4 flex-wrap" id="top-container">
+			<div class="w-45">
+				<div class="my-2 text-center">LL(1) grammar :</div>
+			<textarea id="grammar" class="form-control p-4 mx-auto" rows="10">S -> A B C
 						A -> a b A | a b
 						B -> b | B C
 						C -> c | c C</textarea>
+
+			</div>
+			<div class="w-45">
+				<div class="my-2 text-center">After left recursion :</div>
+			<textarea id="left_recursion_grammar" class="form-control p-4 mx-auto" rows="10"></textarea>
+			</div>
+			<div class="w-45">
+				<div class="text-center">After left factor :</div>
+			<textarea id="left_factored_grammar" class="form-control p-4 mx-auto" rows="10"></textarea>
+			</div>
 		</div>
 
 		<div class="row py-4">
