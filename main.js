@@ -16,7 +16,6 @@ let right_prod = {};
 //for temporarily storing rule after performing LF
 const f_prod_no_lf = {};
 
-
 function grammarChanged() {
   $element("llTableRows").innerHTML = "";
 
@@ -88,10 +87,16 @@ function leftRecursion() {
 //   rules = temp_rules;
 }
 
+//TODO: Complete this function
 const requireLeftFactoring = (temp_rules) => {
 	for (let i = 0; i < temp_rules.length; i++) {
 		
 	}
+}
+
+//TODO: Implement Left Factoring
+const removeCommonPrefix = () => {
+  //
 }
 
 //Start of Left Factoring
