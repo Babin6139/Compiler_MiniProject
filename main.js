@@ -344,8 +344,15 @@ function collectFirsts4(development, nonterminalFirsts) {
       var first = firsts[symbol][k];
 
       epsilonInSymbolFirsts |= first == EPSILON;
+      if (first==EPSILON && j+1==development.length){
 
-      result |= addUnique(first, nonterminalFirsts);
+        result |= addUnique(first, nonterminalFirsts);
+      }else if(first !==EPSILON){
+
+        result |= addUnique(first, nonterminalFirsts);
+      }
+      // result |= addUnique(first, nonterminalFirsts);
+      
     }
 
     if (!epsilonInSymbolFirsts) {
@@ -382,8 +389,14 @@ function collectFirsts3(sequence) {
       var first = firsts[symbol][k];
 
       epsilonInSymbolFirsts |= first == EPSILON;
+      if (first==EPSILON && j+1==sequence.length){
 
-      addUnique(first, result);
+        addUnique(first, result);
+      }else if(first !==EPSILON){
+
+        addUnique(first, result);
+      }
+      // addUnique(first, result);
     }
 
     epsilonInSymbolFirsts |= firsts[symbol] == undefined || firsts[symbol].length == 0;
@@ -581,17 +594,18 @@ function parseInput() {
     } else {
       if (isElement(stackTop, nonterminals)) {
         rule = ruleTable[stackTop][symbol];
-        // if (rule !== undefined) {
-        //   if (rule.includes("<br>")) {
-        //     let temp_rule = rule.split("<br>");
-        //     // temp_rule.forEach(r=>{
-        //     //   if(!r.includes(EPSILON)){
-        //     //     rule=r;
-        //     //   }
-        //     // })
-        //     rule = temp_rule[1];
-        //   }
-        // }
+        if (rule !== undefined) {
+          if (rule.includes("<br>")) {
+            // let temp_rule = rule.split("<br>");
+            // // temp_rule.forEach(r=>{
+            // //   if(!r.includes(EPSILON)){
+            // //     rule=r;
+            // //   }
+            // // })
+            // rule = temp_rule[1];
+            break
+          }
+        }
         var node = new Object();
         node.label = stackTop;
         node.children = [];
@@ -618,6 +632,11 @@ function parseInput() {
       } else {
         ok = false;
         break;
+      }
+      if(stack.length==1 || input.length==1){
+        ok=true;
+      }else{
+        ok=false
       }
     }
 
