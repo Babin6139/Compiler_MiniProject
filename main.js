@@ -22,24 +22,24 @@ function grammarChanged() {
   alphabet = [];
   nonterminals = [];
   terminals = [];
-  rules=[]
-  firsts=[]
-  follows=[]
-  ruleTable=[]
+  rules = [];
+  firsts = [];
+  follows = [];
+  ruleTable = [];
   left_prod = [];
   right_prod = {};
-//for temporarily storing rule after performing LF
+  //for temporarily storing rule after performing LF
   f_prod_no_lf = {};
   rules = $element("grammar").value.split("\n");
 
   leftRecursion();
-  $element("left_recursion_grammar").value=rules.join("\n");
-  if(requireLeftFactoring()){
+  $element("left_recursion_grammar").value = rules.join("\n");
+  if (requireLeftFactoring()) {
     removeCommonPrefix();
-    temp_rules=createGrammar();
-    rules=temp_rules
+    temp_rules = createGrammar();
+    rules = temp_rules;
   }
-  $element("left_factored_grammar").value=rules.join("\n");
+  $element("left_factored_grammar").value = rules.join("\n");
   collectAlphabetAndNonterminalsAndTerminals();
   collectFirsts();
   collectFollows();
@@ -90,127 +90,110 @@ function leftRecursion() {
       }
     }
   }
-  rules=temp_rules
+  rules = temp_rules;
 }
 
 const requireLeftFactoring = () => {
-	for (let i = 0; i < rules.length; i++) {
-	let [l, r] = rules[i].split('->');
-	left_prod.push(l);
+  for (let i = 0; i < rules.length; i++) {
+    let [l, r] = rules[i].split("->");
+    left_prod.push(l);
 
-	if (!(l in right_prod)) {
-		right_prod[l] = r.trim();
-	} else {
-		right_prod[l] = [].concat(right_prod[l], r.trim());
-	}
-}
-const duplicateTerminalSymbol = getDuplicateNonTerminal(left_prod);
-let left_factor=false
-duplicateTerminalSymbol.map(l => {
-	const common_seq = getCommonCharacters(right_prod[l]);
-    if (common_seq.length==0){
-        left_factor=false
-    }else{
-        left_factor=true;
-        return;
+    if (!(l in right_prod)) {
+      right_prod[l] = r.trim();
+    } else {
+      right_prod[l] = [].concat(right_prod[l], r.trim());
     }
-}
-)
-return left_factor
-
-}
-  
-  
-  //TODO: Implement Left Factoring
-  const removeCommonPrefix = () => {
+  }
   const duplicateTerminalSymbol = getDuplicateNonTerminal(left_prod);
-  duplicateTerminalSymbol.forEach(l => {
+  let left_factor = false;
+  duplicateTerminalSymbol.map((l) => {
     const common_seq = getCommonCharacters(right_prod[l]);
-  
+    if (common_seq.length == 0) {
+      left_factor = false;
+    } else {
+      left_factor = true;
+      return;
+    }
+  });
+  return left_factor;
+};
+
+//TODO: Implement Left Factoring
+const removeCommonPrefix = () => {
+  const duplicateTerminalSymbol = getDuplicateNonTerminal(left_prod);
+  duplicateTerminalSymbol.forEach((l) => {
+    const common_seq = getCommonCharacters(right_prod[l]);
+
     if (common_seq.length !== 0) {
       f_prod_no_lf[l] = [`${l} -> ${common_seq.trim()} ${l.trim()}'`];
-      
+
       const uncommon_char = [];
-  
+
       for (const prod of right_prod[l]) {
         [alpha, beta] = prod.split(common_seq);
         uncommon_char.push(beta);
       }
-  
-  
+
       for (const prod of uncommon_char) {
-        if(typeof prod !== 'undefined' && prod.length !== 0) {
+        if (typeof prod !== "undefined" && prod.length !== 0) {
           f_prod_no_lf[l].push(`${l}' -> ${prod}`);
         } else {
-            f_prod_no_lf[l].push(`${l}' -> Ɛ`);
+          f_prod_no_lf[l].push(`${l}' -> Ɛ`);
         }
       }
-  
     }
   });
-  
-  
+
   //updated rule after performing LF
-  f_prod_no_lf = {...right_prod, ...f_prod_no_lf}
-  }
-  
-  
-  
-  
-  
-  //TODO: Create new function 
-  
-  
-  //Get list of duplicate Terminal symbol
-  const getDuplicateNonTerminal = elements => {
-    return elements.filter((item, index) => elements.indexOf(item) !== index);
-  };
-  
-  
-  
-  //get common characters from the right part of the production
-  //incase of multiple rule
-  function getCommonCharacters(values) {
-    const common_characters = [];
-    for (let i = 0; i < values[0].length; i++) {
-      let char = values[0].charAt(i);
-      let x = 1;
-      while (x < values.length) {
-        if (values[x].includes(char)) {
-          if (x === values.length - 1) {
-            common_characters.push(char);
-          }
+  f_prod_no_lf = { ...right_prod, ...f_prod_no_lf };
+};
+
+//TODO: Create new function
+
+//Get list of duplicate Terminal symbol
+const getDuplicateNonTerminal = (elements) => {
+  return elements.filter((item, index) => elements.indexOf(item) !== index);
+};
+
+//get common characters from the right part of the production
+//incase of multiple rule
+function getCommonCharacters(values) {
+  const common_characters = [];
+  for (let i = 0; i < values[0].length; i++) {
+    let char = values[0].charAt(i);
+    let x = 1;
+    while (x < values.length) {
+      if (values[x].charAt(i)===char) {
+        if (x === values.length - 1) {
+          common_characters.push(char);
         }
-        else{
-          return common_characters.join('');
-        }
-        x += 1;
+      } else {
+        return common_characters.join("");
       }
+      x += 1;
     }
-  
-    return common_characters.join('');
-  }
-  
-  function createGrammar(){
-      const temp_grammar=[]
-      for (const [key, value] of Object.entries(f_prod_no_lf)) {
-      if(typeof value==="object"){
-          value.forEach(v=>{
-              if(v.includes("->")){
-                  temp_grammar.push(v)
-              }else{
-                  temp_grammar.push(`${key} -> ${v}`)
-              }
-              
-          })
-      }else{
-          temp_grammar.push(`${key} -> ${value}`)
-      }
-      
-  }
-  return temp_grammar;
   }
 
+  return common_characters.join("");
+}
+
+function createGrammar() {
+  const temp_grammar = [];
+  for (const [key, value] of Object.entries(f_prod_no_lf)) {
+    if (typeof value === "object") {
+      value.forEach((v) => {
+        if (v.includes("->")) {
+          temp_grammar.push(v);
+        } else {
+          temp_grammar.push(`${key} -> ${v}`);
+        }
+      });
+    } else {
+      temp_grammar.push(`${key} -> ${value}`);
+    }
+  }
+  return temp_grammar;
+}
 
 function displayTable() {
   $element("llTableHead").innerHTML = "<th>FIRST</th><th>FOLLOW</th><th>Nonterminal</th>";
@@ -598,18 +581,17 @@ function parseInput() {
     } else {
       if (isElement(stackTop, nonterminals)) {
         rule = ruleTable[stackTop][symbol];
-        if(rule!==undefined){
-
-          if (rule.includes("<br>")){
-            let temp_rule=rule.split("<br>");
-            // temp_rule.forEach(r=>{
-            //   if(!r.includes(EPSILON)){
-            //     rule=r;
-            //   }
-            // })
-            rule=temp_rule[1]
-          }
-        }
+        // if (rule !== undefined) {
+        //   if (rule.includes("<br>")) {
+        //     let temp_rule = rule.split("<br>");
+        //     // temp_rule.forEach(r=>{
+        //     //   if(!r.includes(EPSILON)){
+        //     //     rule=r;
+        //     //   }
+        //     // })
+        //     rule = temp_rule[1];
+        //   }
+        // }
         var node = new Object();
         node.label = stackTop;
         node.children = [];
